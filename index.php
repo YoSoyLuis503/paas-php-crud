@@ -107,6 +107,7 @@ if ($pdo) {
 }
 
 $pod_hostname = gethostname();
+$local_ip = '192.168.88.128';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -143,11 +144,23 @@ $pod_hostname = gethostname();
                 </div>
             </div>
 
-            <!-- Auditoría Pod & Réplicas en vivo -->
-            <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+            <!-- Auditoría de Red, Pod & Réplicas en vivo -->
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                <div class="card-glass px-3 py-2 rounded-xl text-right">
+                    <span class="block text-[10px] text-[#C1C0C2] uppercase mono">IP Local (Clúster / VM)</span>
+                    <span class="mono text-xs font-semibold text-[#8A9DB1] block">
+                        <i class="fa-solid fa-network-wired text-[10px] mr-1"></i><?= htmlspecialchars($local_ip) ?>
+                    </span>
+                </div>
+                <div class="card-glass px-3 py-2 rounded-xl text-right">
+                    <span class="block text-[10px] text-[#C1C0C2] uppercase mono">IP Pública (Salida WAN)</span>
+                    <span class="mono text-xs font-semibold text-[#ECC5C6] block">
+                        <i class="fa-solid fa-globe text-[10px] mr-1"></i><span id="publicIpDisplay">138.97.141.119</span>
+                    </span>
+                </div>
                 <div class="card-glass px-3 py-2 rounded-xl text-right">
                     <span class="block text-[10px] text-[#C1C0C2] uppercase mono">Pod Kubernetes</span>
-                    <span class="mono text-xs font-semibold text-[#8A9DB1] truncate max-w-[200px] block" title="<?= htmlspecialchars($pod_hostname) ?>">
+                    <span class="mono text-xs font-semibold text-white truncate max-w-[170px] block" title="<?= htmlspecialchars($pod_hostname) ?>">
                         <i class="fa-solid fa-cube text-[10px] mr-1"></i><?= htmlspecialchars($pod_hostname) ?>
                     </span>
                 </div>
@@ -427,6 +440,11 @@ $pod_hostname = gethostname();
             document.getElementById('edit_categoria').value = prod.categoria;
             document.getElementById('modalEditar').classList.remove('hidden');
         }
+
+        fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(2000) })
+            .then(r => r.json())
+            .then(d => { if (d && d.ip) document.getElementById('publicIpDisplay').innerText = d.ip; })
+            .catch(() => {});
     </script>
 </body>
 </html>
