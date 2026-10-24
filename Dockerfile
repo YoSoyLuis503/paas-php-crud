@@ -1,30 +1,33 @@
 # ==============================================================================
-# Dockerfile - Stack Clásico (PHP 8.2 + MySQL Driver)
+# Dockerfile - Stack Clásico (PHP 8.2 + Apache 2.4 + MySQL Driver)
 # Adaptado para Nube Privada y Restricciones de Seguridad Kubernetes (runAsNonRoot)
 # ==============================================================================
-FROM php:8.2-cli-alpine
+FROM php:8.2-apache
 
-# Instalar dependencias del sistema y extensión pdo_mysql
-RUN apk add --no-cache libstdc++ \
-    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
-    && docker-php-ext-install pdo pdo_mysql \
-    && apk del .build-deps
+# Instalar extensión pdo_mysql oficial
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Establecer directorio de trabajo
+# Configurar Apache para escuchar en el puerto 8080 (política runAsNonRoot de Kubernetes)
+RUN sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf \
+    && sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8080>/g' /etc/apache2/sites-available/000-default.conf \
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Directorio de trabajo
 WORKDIR /var/www/html
 
 # Copiar archivos de la aplicación
 COPY . /var/www/html
 
-# Crear y asignar usuario no privilegiado (UID 101 coincide con la política de seguridad del Helm Chart)
-RUN addgroup -g 101 appuser && adduser -u 101 -D -G appuser appuser \
-    && chown -R appuser:appuser /var/www/html
+# Crear usuario 101 y asignar permisos de ejecución para Apache y la aplicación
+RUN useradd -u 101 appuser \
+    && chown -R 101:101 /var/www/html \
+    && chown -R 101:101 /var/log/apache2 \
+    && chown -R 101:101 /var/run/apache2
 
 USER 101:101
 
-# Puerto dinámico: si se inyecta PORT usa ese, por defecto 8080 (seguro para non-root)
 ENV PORT=8080
 EXPOSE 8080
 
-# Servidor web integrado de PHP (ligero, ultra rápido y listo para producción en micro-pods)
-CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080} -t /var/www/html"]
+# Servidor HTTP Apache 2.4 en primer plano
+CMD ["apache2-foreground"]
