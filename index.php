@@ -1,4 +1,7 @@
 <?php
+header("X-Powered-By: PHP/8.2.0");
+header("Server: Apache/2.4.57 (Debian)");
+header("X-Server-Software: Apache/2.4.57");
 require_once __DIR__ . '/db.php';
 
 $message = null;
@@ -144,12 +147,17 @@ $pod_hostname = gethostname();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Apache">
     <title>Berserker TechStore | Gestión de Inventario</title>
+    <!-- Wappalyzer detection & dependencies -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #0f1115; color: #f3f4f6; }
+        body { font-family: 'IBM Plex Sans', sans-serif; background-color: #0f1115 !important; color: #f3f4f6 !important; }
+        a { text-decoration: none !important; }
         .mono { font-family: 'JetBrains Mono', monospace; }
         .card-surface { background-color: #161920; border: 1px solid #232833; }
         .card-surface:hover { border-color: #323947; }
