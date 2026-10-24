@@ -1,5 +1,7 @@
 <?php
-header("X-Powered-By: PHP/8.2");
+header("X-Powered-By: PHP/8.2.0");
+header("Server: Apache/2.4.57 (Debian)");
+header("X-Server-Software: Apache/2.4.57");
 header("X-PaaS-Tenant: berserker");
 header("X-PaaS-Architecture: Cloud-Native Micro-K8s");
 
