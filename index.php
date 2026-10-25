@@ -162,6 +162,37 @@ $pod_hostname = gethostname();
         .card-surface { background-color: #161920; border: 1px solid #232833; }
         .card-surface:hover { border-color: #323947; }
         .table-row-hover:hover { background-color: #1a1e27; }
+        
+        /* Corrección de contraste y visibilidad de inputs */
+        input, select, textarea {
+            background-color: #101217 !important;
+            color: #FFFFFF !important;
+            border: 1px solid #383F4D !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+        input:focus, select:focus, textarea:focus {
+            background-color: #161A22 !important;
+            color: #FFFFFF !important;
+            outline: none !important;
+            border-color: #F59E0B !important;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3) !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
+        input::placeholder, textarea::placeholder {
+            color: #64748B !important;
+            -webkit-text-fill-color: #64748B !important;
+        }
+        option {
+            background-color: #101217 !important;
+            color: #FFFFFF !important;
+        }
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px #101217 inset !important;
+            -webkit-text-fill-color: #FFFFFF !important;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -274,10 +305,13 @@ $pod_hostname = gethostname();
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
                     <input type="text" name="q" value="<?= htmlspecialchars($_GET['q'] ?? '') ?>" placeholder="Buscar por producto o categoría..."
-                        class="w-full bg-[#101217] border border-[#282d37] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-500">
+                        style="background-color: #101217 !important; color: #FFFFFF !important; border: 1px solid #383F4D !important;"
+                        class="w-full rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-500">
                 </div>
 
-                <select name="cat" onchange="this.form.submit()" class="w-full sm:w-44 bg-[#101217] border border-[#282d37] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
+                <select name="cat" onchange="this.form.submit()" 
+                    style="background-color: #101217 !important; color: #FFFFFF !important; border: 1px solid #383F4D !important;"
+                    class="w-full sm:w-44 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500">
                     <option value="">Todas las categorías</option>
                     <?php
                     $cats = ['Servidores', 'Redes', 'Almacenamiento', 'Energía', 'Seguridad', 'General'];
@@ -291,14 +325,6 @@ $pod_hostname = gethostname();
                 <?php if (!empty($_GET['q']) || !empty($_GET['cat'])): ?>
                     <a href="index.php" class="text-xs text-gray-400 hover:text-white px-2 py-1.5 transition">Limpiar</a>
                 <?php endif; ?>
-            </form>
-
-            <form method="POST" onsubmit="return confirm('¿Restablecer el inventario con los datos iniciales de prueba?');">
-                <input type="hidden" name="action" value="seed">
-                <button type="submit" class="bg-[#1c2027] hover:bg-[#252b36] text-gray-300 border border-[#282d37] text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fa-solid fa-rotate-left text-gray-400"></i>
-                    <span>Cargar Datos Demo</span>
-                </button>
             </form>
         </div>
 
@@ -409,25 +435,30 @@ $pod_hostname = gethostname();
                 <div>
                     <label class="block font-medium text-gray-300 mb-1">Nombre del Producto</label>
                     <input type="text" name="nombre" id="formNombre" required placeholder="Ej. Servidor Blade 4U"
-                        class="w-full bg-[#101217] border border-[#282d37] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+                        style="background-color: #101217 !important; color: #FFFFFF !important; border: 1px solid #383F4D !important;"
+                        class="w-full rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-medium text-gray-300 mb-1">Precio ($ USD)</label>
                         <input type="number" step="0.01" min="0.01" name="precio" id="formPrecio" required placeholder="199.99"
-                            class="w-full bg-[#101217] border border-[#282d37] rounded-xl px-3 py-2 text-white mono focus:outline-none focus:border-amber-500">
+                            style="background-color: #101217 !important; color: #FFFFFF !important; border: 1px solid #383F4D !important;"
+                            class="w-full rounded-xl px-3 py-2 text-white mono focus:outline-none focus:border-amber-500">
                     </div>
                     <div>
                         <label class="block font-medium text-gray-300 mb-1">Stock Inicial</label>
                         <input type="number" min="0" name="stock" id="formStock" required placeholder="10"
-                            class="w-full bg-[#101217] border border-[#282d37] rounded-xl px-3 py-2 text-white mono focus:outline-none focus:border-amber-500">
+                            style="background-color: #101217 !important; color: #FFFFFF !important; border: 1px solid #383F4D !important;"
+                            class="w-full rounded-xl px-3 py-2 text-white mono focus:outline-none focus:border-amber-500">
                     </div>
                 </div>
 
                 <div>
                     <label class="block font-medium text-gray-300 mb-1">Categoría</label>
-                    <select name="categoria" id="formCategoria" class="w-full bg-[#101217] border border-[#282d37] rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+                    <select name="categoria" id="formCategoria" 
+                        style="background-color: #101217 !important; color: #FFFFFF !important; border: 1px solid #383F4D !important;"
+                        class="w-full rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
                         <option value="Servidores">Servidores</option>
                         <option value="Redes">Redes</option>
                         <option value="Almacenamiento">Almacenamiento</option>

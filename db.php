@@ -40,6 +40,22 @@ if (!empty($db_host) && !empty($db_user)) {
                 creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         ");
+
+        // Asegurar que los datos comerciales iniciales siempre estén presentes
+        $countStmt = $pdo->query("SELECT COUNT(*) AS c FROM productos");
+        if ($countStmt) {
+            $c = intval($countStmt->fetch()['c'] ?? 0);
+            if ($c === 0) {
+                $pdo->exec("
+                    INSERT INTO productos (nombre, precio, stock, categoria) VALUES 
+                    ('Servidor Rack 2U Intel Xeon', 2490.00, 8, 'Servidores'),
+                    ('Switch Gestionable 48 Puertos PoE+', 680.50, 15, 'Redes'),
+                    ('Router VPN Balanceador Multi-WAN', 320.00, 22, 'Redes'),
+                    ('Storage NAS 4 Bahías 16TB', 890.00, 12, 'Almacenamiento'),
+                    ('UPS Online Doble Conversión 3kVA', 550.00, 5, 'Energía');
+                ");
+            }
+        }
     } catch (Exception $e) {
         $db_error = $e->getMessage();
     }
